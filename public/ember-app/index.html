@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ember Starter Kit</title>
+  <link rel="stylesheet" href="ember-app/css/normalize.css">
+  <link rel="stylesheet" href="ember-app/css/style.css">
+  <link rel="stylesheet" href="ember-app/bootstrap/css/bootstrap-yeti.min.css">
+</head>
+<body>
+  <script type="text/x-handlebars">
+    <div class="row text-center">
+        <img class="icon" src="ember-app/img/book.svg" height="100%" style="width: 150px; height: 150px;">
+    </div>
+
+    <div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8"">
+            {{input class="form-control input-lg" type=text value=searchQuery placeholder="Search..."}}
+            <div style="margin-top:20px" class="well">
+                {{# unless selected_book }}
+                {{#each suggestions}}
+                <div style="padding-bottom: 10px" class="row">
+                    <div class="col-md-1">
+                        <img {{bind-attr src=this.volumeInfo.imageLinks.smallThumbnail}}>
+                    </div>
+                    <div class="col-md-9">
+                        <div style="margin-left:15px" class="content-heading">
+                            <h3 class="nomargin-bottom">{{this.volumeInfo.title}}</h3>
+                            <h4 class="nomargin-top"><small>{{this.volumeInfo.authors}}</small></h4>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <h3>
+                            <button {{action "select_suggestion" this}} type="button" class="pull-right btn btn-primary">Select</button>
+                        </h3>
+                    </div>
+                </div>
+                {{/each}}
+                {{/unless}}
+                {{#if selected_book }}
+                    {{selected_book.volumeInfo.authors}}
+                {{/if}}
+            </div> <!-- end well -->
+    </div>
+  </div>
+    {{outlet}}
+  </div>
+  </script>
+
+  <script type="text/x-handlebars" id="index">
+    <ul>
+    {{suggestions}}
+    </ul>
+  </script>
+
+  <script src="ember-app/js/libs/jquery-1.10.2.js"></script>
+  <script src="ember-app/js/libs/handlebars-1.1.2.js"></script>
+  <script src="ember-app/js/libs/ember-1.7.0.js"></script>
+  <script src="ember-app/js/app.js"></script>
+  <script src="ember-app/bootstrap/js/bootstrap.js"></script>
+  <!-- to activate the test runner, add the "?test" query string parameter -->
+  <script src="ember-app/tests/runner.js"></script>
+</body>
+</html>
