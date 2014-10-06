@@ -45,7 +45,7 @@ router.route('/books')
     .post(function(req, res){
         var db = req.db;
         var collection = db.get('bookcollection');
-        req.body._id = parseInt(req.body._id, 10);
+        console.log(req.body);
         collection.insert(req.body, function(err, doc){
             res.json(doc);
         });
@@ -62,13 +62,13 @@ router.route('/books')
         });
     });
 
-router.route('/books/:isbn')
+router.route('/books/:industry_id')
 
     .get(function(req, res) {
-        isbn = parseInt(req.params.isbn, 10);
+        var industry_id = req.params.industry_id;
         var db = req.db;
         var collection = db.get('bookcollection');
-        collection.findById(isbn, function(err, book) {
+        collection.findOne({'industry_id': industry_id}, function(err, book) {
             if (err)
                 res.send(err);
             res.json(book);

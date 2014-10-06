@@ -23,12 +23,12 @@
                 {{#each suggestions}}
                 <div style="padding-bottom: 10px" class="row">
                     <div class="col-md-1">
-                        <img {{bind-attr src=this.imageLinks.smallThumbnail}}>
+                        <img {{bind-attr src=this.smallThumbnail}}>
                     </div>
                     <div class="col-md-9">
                         <div style="margin-left:15px" class="content-heading">
                             <h3 class="nomargin-bottom">{{this.title}}</h3>
-                            <h4 class="nomargin-top"><small>{{this.authors}}</small></h4>
+                            <h4 class="nomargin-top"><small>{{this.author}}</small></h4>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -40,15 +40,31 @@
                 {{/each}}
                 {{/unless}}
                 {{#if selected_book }}
-                <div class="row">
-                    <div class="col-md-3">
-                        <img {{bind-attr src=selected_book.imageLinks.thumbnail}}>
+                <div class="book-display">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img {{bind-attr src=selected_book.thumbnail}}>
+                        </div>
+                        <div id="selected-book" class="col-md-9">
+                            <div class="content-heading">
+                                <h3 class="nomargin-bottom nomargin-top">{{selected_book.title}}</h3>
+                                <h4 class="nomargin-top"><small>{{selected_book.author}}</small></h4>
+                                {{selected_book.description}}
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        <div class="content-heading">
-                            <h3 class="nomargin-bottom nomargin-top">{{selected_book.title}}</h3>
-                            <h4 class="nomargin-top"><small>{{selected_book.authors}}</small></h4>
-                            {{selected_book.description}}
+                    <div class="row top-buffer">
+                        <div class="col-md-3">
+                            <button {{action "clear_selection"}} type="button" class="btn btn-block btn-lg btn-default">
+                               Return
+                            </button>
+                        </div>
+                        <div class="col-md-9">
+                            {{#if selected_book.suggested}}
+                                <button type="button" class="btn btn-block btn-lg btn-success disabled">This is a Suggested Book</button>
+                            {{else}}
+                                <button {{action "suggest_book"}} type="button" class="btn btn-block btn-lg btn-primary">Suggest This Book</button>
+                            {{/if}}
                         </div>
                     </div>
                 </div>

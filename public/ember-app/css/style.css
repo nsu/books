@@ -10,3 +10,7 @@
 .nomargin-bottom {
     margin-bottom: 0px;
 }
+
+.top-buffer { 
+    margin-top:20px; 
+}
