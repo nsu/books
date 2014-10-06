@@ -3,6 +3,12 @@ App.Router.map(function() {
   // put your routes here
 });
 
+App.IndexRoute = Ember.Route.extend({
+  model: function() {
+    return ['red', 'yellow', 'blue'];
+  }
+});
+
 App.ApplicationController = Ember.ArrayController.extend({
     selected_book: null,
     searchQuery: '',
