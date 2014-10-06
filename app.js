@@ -79,6 +79,28 @@ router.route('/books/:industry_id')
 
 app.use ('/', router);
 
+var passport = require('passport')
+  , FacebookStrategy = require('passport-facebook').Strategy;
+
+passport.use(new FacebookStrategy({
+    clientID: "706544599428296",
+    clientSecret: "38d9e6c58e694cf8684fe8d637e0e16a",
+    callbackURL: "http://karp-books.herokuapp.com/auth/facebook/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    User.findOrCreate(..., function(err, user) {
+      if (err) { return done(err); }
+      done(null, user);
+    });
+  }
+));
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get('/auth/facebook/callback', 
+          passport.authenticate('facebook', { successRedirect: '/',
+                                                    failureRedirect: '/login' }))
+
+
 
 // Bullshit below
 
