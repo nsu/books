@@ -88,7 +88,8 @@ passport.use(new FacebookStrategy({
     callbackURL: "http://karp-books.herokuapp.com/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate(..., function(err, user) {
+    collection = db.get('users');
+    collection.findOrCreate({ facebookId: profile.id }, function(err, user) {
       if (err) { return done(err); }
       done(null, user);
     });
