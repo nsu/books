@@ -65,9 +65,10 @@ router.route('/books')
 router.route('/books/:isbn')
 
     .get(function(req, res) {
+        isbn = parseInt(req.params.isbn, 10);
         var db = req.db;
         var collection = db.get('bookcollection');
-        collection.findById(req.params.isbn, function(err, book) {
+        collection.findById(isbn, function(err, book) {
             if (err)
                 res.send(err);
             res.json(book);
