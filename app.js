@@ -89,7 +89,7 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     collection = db.get('users');
-    collection.findOrCreate({ facebookId: profile.id }, function(err, user) {
+    collection.findAndModify({ facebookId: profile.id }, {upsert: true}, function(err, user) {
       if (err) { return done(err); }
       done(null, user);
     });
