@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('10.0.33.34/karp-books');
+connection_string = process.env.MONGOHQ_URL || '10.0.33.34/karp-books';
+var db = monk(connection_string);
 
 
 var app = express();
