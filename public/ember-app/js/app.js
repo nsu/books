@@ -85,3 +85,10 @@ App.IndexController = Ember.ArrayController.extend({
     }
 
 });
+
+Ember.Handlebars.helper('truncate', function(length, text) {
+    if (text && text.length > length) {
+        return text.substr(0,length) + '. . .';
+    }
+    return text;
+})

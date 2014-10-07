@@ -94,7 +94,7 @@ router.route('/books')
         // POSTing is only allowed for creating new books
         Book.findOne({'industry_id': req.body.industry_id}, function(err, book){
             if (book){
-                res.status(409).end();
+                return res.status(409).end();
             }
             book = new Book(req.body)
             book.save(function(err, doc){
@@ -125,8 +125,16 @@ router.route('/books/:industry_id')
                 res.send(err);
             res.json(book);
         });
+    })
+    .put(function(req, res){
+        if (!req.user || !req.user.facebookId === "10152371097391581") { return res.status(403).end(); }
+        console.log(req);
     });
 
+router.route('/user/').get(function(req, res) {
+    if (!req.user || !req.user.facebookId === "10152371097391581") { return res.status(403).end(); }
+    res.json(req.user);
+});
 
 app.use ('/', router);
 
