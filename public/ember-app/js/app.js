@@ -12,7 +12,6 @@ App.ManageRoute = Ember.Route.extend({
     setupController: function(controller, model) {
         controller.set('model', model);
         $.getJSON('/user/').success(function(data){
-            console.log(data);
             controller.set('user', data);
         });
     }
@@ -20,9 +19,23 @@ App.ManageRoute = Ember.Route.extend({
 });
 
 App.ManageController = Ember.ArrayController.extend({
+    itemController: 'book',
+});
+
+// When a book's read/unread button is clicked
+// flip the read value and PUT to the app
+App.BookController = Ember.ObjectController.extend({
     actions: {
-        mark_read: function(book) {
-            console.log(book.ASIN);           
+        toggle_read: function(book) {
+            self = this;
+            this.set('read', !book.read);
+            $.ajax({
+                type: 'PUT', 
+                url: 'books/'+book.industry_id,
+                data: book
+            }).done(function(data){
+                self.setProperties(data);
+            });
         }
    }
 });

@@ -97,8 +97,11 @@
             </div>
             <div class="col-md-6">
                 <h3>
+                    <a {{bind-attr href=this.amazon_link}} class="btn btn-primary">View on Amazon</a>
                     {{# unless this.read }}
-                        <button {{action "mark_read" this}} type="button" class="pull-right btn btn-primary">Unread</button>
+                        <button {{action "toggle_read" this}} type="button" class="btn btn-default">Unread</button>
+                    {{else}}
+                        <button {{action "toggle_read" this}} type="button" class="btn btn-success">Read</button>
                     {{/unless}}
                 </h3>
             </div>

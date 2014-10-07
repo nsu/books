@@ -38,7 +38,9 @@ var User = mongoose.model('User', userSchema);
 var bookSchema = new mongoose.Schema({
     industry_id:    String,
     ASIN:           String,
-    amazon_link:    String
+    amazon_link:    String,
+    read:           Boolean,
+    suggested:      Boolean
 }, {strict: false})
 var Book = mongoose.model('Book', bookSchema);
 
@@ -158,8 +160,17 @@ router.route('/books/:industry_id')
         });
     })
     .put(function(req, res){
-        if (!req.user || !req.user.facebookId === "10152371097391581") { return res.status(403).end(); }
-        console.log(req);
+        //if (!req.user || !req.user.facebookId === "10152371097391581") { return res.status(403).end(); }
+        var industry_id = req.params.industry_id;
+        // strip off the _id field. Mongoose doesn't allow updates with that included
+        delete req.body._id;
+        Book.findOneAndUpdate({'industry_id': industry_id}, req.body, function(err, book){
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+            res.json(book);
+        });
     });
 
 router.route('/user/').get(function(req, res) {
