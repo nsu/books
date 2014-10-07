@@ -12,9 +12,18 @@ var exphbs  = require('express-handlebars');
 
 
 var mongo = require('mongodb');
-var monk = require('monk');
+var mongoose = require('mongoose');
 connection_string = process.env.MONGOHQ_URL || '10.0.33.34/karp-books';
-var db = monk(connection_string);
+var db = mongoose.connect(connection_string);
+
+var userSchema = new mongoose.Schema({
+    facebookId: String
+})
+var User = mongoose.model('User', userSchema);
+
+var bookSchema = new mongoose.Schema({}, {strict: false})
+var Book = mongoose.model('Book', bookSchema);
+
 passport.serializeUser(function(user, done) {
       done(null, user);
 });
@@ -29,13 +38,13 @@ passport.use(new FacebookStrategy({
     callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    collection = db.get('users');
-    collection.findOne({ facebookId: profile.id }, function(err, user) {
+    User.findOne({ facebookId: profile.id }, function(err, user) {
       if (err) { 
           return done(err);
       } 
       if (!user){
-        collection.insert({ facebookId: profile.id }, function(err, user){
+        user = new User({ facebookId: profile.id })
+        user.save(function(err, user){
             return done(null, user)
         });
       }
@@ -51,7 +60,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(cookieParser());
@@ -83,19 +92,22 @@ router.route('/books')
         var db = req.db;
         var collection = db.get('bookcollection');
         // POSTing is only allowed for creating new books
-        collection.findOne({'industry_id': req.body.industry_id}, function(err, book){
+        Book.findOne({'industry_id': req.body.industry_id}, function(err, book){
             if (book){
                 res.status(409).end();
             }
-            collection.insert(req.body, function(err, doc){
+            book = new Book(req.body)
+            book.save(function(err, doc){
+                if (err) {
+                    res.send(err);
+                }
                 res.json(doc);
             });
         })
     })
     .get(function(req, res){
-        var db = req.db;
         var collection = db.get('bookcollection');
-        collection.find({}, function(err, books){
+        Book.find({}, function(err, books){
             if (err) {
                 res.send(err);
             }
@@ -108,9 +120,7 @@ router.route('/books/:industry_id')
 
     .get(function(req, res) {
         var industry_id = req.params.industry_id;
-        var db = req.db;
-        var collection = db.get('bookcollection');
-        collection.findOne({'industry_id': industry_id}, function(err, book) {
+        Book.findOne({'industry_id': industry_id}, function(err, book) {
             if (err)
                 res.send(err);
             res.json(book);
@@ -120,9 +130,9 @@ router.route('/books/:industry_id')
 
 app.use ('/', router);
 
-app.get('/manage', ensureAuthenticated, function(req, res){
-    res.sendFile("public/ember-app/index.html", { root: __dirname });
-});
+//app.get('/manage', ensureAuthenticated, function(req, res){
+//    res.sendFile("public/ember-app/manage.html", { root: __dirname });
+//});
 
 app.get('/login', function(req, res){
   res.render('login', { user: req.user });
@@ -176,8 +186,8 @@ app.use(function(err, req, res, next) {
 
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-
+  //if (req.isAuthenticated()) { return next(); }
+  return next();
   res.redirect('/login')
 }
 

@@ -1,9 +1,19 @@
 App = Ember.Application.create();
 App.Router.map(function() {
-  // put your routes here
+  this.route("manage");
 });
 
-App.ApplicationController = Ember.ArrayController.extend({
+App.ManageRoute = Ember.Route.extend({
+    model: function(){
+        return $.getJSON('/books/').success(function(data){
+            console.log(data);
+            return data;
+        });
+    }
+});
+
+
+App.IndexController = Ember.ArrayController.extend({
     selected_book: null,
     searchQuery: '',
     suggestions: [],

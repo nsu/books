@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Ember Starter Kit</title>
+  <title>Book Suggestions</title>
   <link rel="stylesheet" href="ember-app/css/normalize.css">
   <link rel="stylesheet" href="ember-app/css/style.css">
   <link rel="stylesheet" href="ember-app/bootstrap/css/bootstrap-yeti.min.css">
@@ -12,6 +12,10 @@
 </head>
 <body>
   <script type="text/x-handlebars">
+    {{outlet}}
+  </script>
+
+  <script type="text/x-handlebars" id="index">
     <div class="row text-center">
         <img class="icon" src="ember-app/img/book.svg" height="100%" style="width: 150px; height: 150px;">
     </div>
@@ -75,21 +79,36 @@
             </div> <!-- end well -->
     </div>
   </div>
-    {{outlet}}
-  </div>
   </script>
 
-  <script type="text/x-handlebars" id="index">
-    <ul>
-    {{suggestions}}
-    </ul>
-  </script>
+    <script type="text/x-handlebars" id="manage">
+        <div class="container">
+        {{#each}}
+        <div style="padding-bottom: 10px" class="row">
+            <div class="col-md-1">
+                <img {{bind-attr src=this.smallThumbnail}}>
+            </div>
+            <div class="col-md-9">
+                <div style="margin-left:15px" class="content-heading">
+                    <h3 class="nomargin-bottom">{{this.title}}</h3>
+                    <h4 class="nomargin-top"><small>{{this.author}}</small></h4>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <h3>
+                    <button {{action "select_suggestion" this}} type="button" class="pull-right btn btn-primary">Select</button>
+                </h3>
+            </div>
+        </div>
+        {{/each}}
+        </div>
+    </script>
 
   <!-- Ember libs and app -->
   <script src="ember-app/js/libs/jquery-1.10.2.js"></script>
   <script src="ember-app/js/libs/handlebars-1.1.2.js"></script>
   <script src="ember-app/js/libs/ember-1.7.0.js"></script>
-  <script src="ember-app/js/index.js"></script>
+  <script src="ember-app/js/app.js"></script>
   <!-- bootstrap -->
   <script src="ember-app/bootstrap/js/bootstrap.js"></script>
   <!-- to activate the test runner, add the "?test" query string parameter -->
