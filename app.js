@@ -9,8 +9,22 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var express = require('express');
 var exphbs  = require('express-handlebars');
+var util = require('util');
+var OperationHelper = require('apac').OperationHelper;
 
 
+//////////////////////////////////////
+// Amazon Product API Configuration //
+//////////////////////////////////////
+var opHelper = new OperationHelper({
+    awsId:     'AKIAJ3BXVJBC65TRDXMQ',
+    awsSecret: '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',
+    assocId:   'alexkarpinski-20'
+});
+
+////////////////////////////////////////
+// MongoDB and Mongoose configuration //
+////////////////////////////////////////
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 connection_string = process.env.MONGOHQ_URL || '10.0.33.34/karp-books';
@@ -21,9 +35,17 @@ var userSchema = new mongoose.Schema({
 })
 var User = mongoose.model('User', userSchema);
 
-var bookSchema = new mongoose.Schema({}, {strict: false})
+var bookSchema = new mongoose.Schema({
+    industry_id:    String,
+    ASIN:           String,
+    amazon_link:    String
+}, {strict: false})
 var Book = mongoose.model('Book', bookSchema);
 
+
+////////////////////////////////////////////
+// Passport (Facebook auth) Configuration //
+////////////////////////////////////////////
 passport.serializeUser(function(user, done) {
       done(null, user);
 });
@@ -53,13 +75,18 @@ passport.use(new FacebookStrategy({
   }
 ));
 
+
+//////////////////
+// Express meat //
+//////////////////
+//
 var app = express();
 
 // view engine setup
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-// uncomment after placing your favicon in /public
+// Holy mother of middleware
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
@@ -70,17 +97,13 @@ app.use(session({ secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// var routes = require('./routes/index');
-// var users = require('./routes/users');
-// app.use('/', routes);
-// app.use('/users', users);
-
-var router = express.Router();
-
+// Include Amazon Product helper on each request
 app.use(function(req,res,next){
-    req.db = db;
+    req.opHelper = opHelper;
     next();
 });
+
+var router = express.Router();
 
 router.route('/').get(function(req,res){
     res.sendFile("public/ember-app/index.html", { root: __dirname });
@@ -89,8 +112,6 @@ router.route('/').get(function(req,res){
 router.route('/books')
 
     .post(function(req, res){
-        var db = req.db;
-        var collection = db.get('bookcollection');
         // POSTing is only allowed for creating new books
         Book.findOne({'industry_id': req.body.industry_id}, function(err, book){
             if (book){
@@ -102,11 +123,21 @@ router.route('/books')
                     res.send(err);
                 }
                 res.json(doc);
-            });
-        })
+                req.opHelper.execute('ItemLookup', {
+                    'SearchIndex': 'Books',
+                    'ItemId': doc.industry_id,
+                    'IdType': 'ISBN'
+                }, function(err, results) { 
+                    if (err) { return }
+                    result = results.ItemLookupResponse.Items[0].Item[0]
+                    doc.ASIN = result.ASIN[0];
+                    doc.amazon_link = result.DetailPageURL[0];
+                    doc.save(function(err, doc){console.log(doc.ASIN)})
+                });
+            });  
+        });
     })
     .get(function(req, res){
-        var collection = db.get('bookcollection');
         Book.find({}, function(err, books){
             if (err) {
                 res.send(err);

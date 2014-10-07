@@ -2,3 +2,4 @@ node-mongo-vagrant/*
 node_modules
 *.swp
 .DS_Store
+rootkey.csv

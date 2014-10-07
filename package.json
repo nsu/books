@@ -18,6 +18,7 @@
     "express-session": "*",
     "passport": "*",
     "passport-facebook": "*",
-    "express-handlebars": "*"
+    "express-handlebars": "*",
+    "node-apac": "dmcquay/node-apac"
   }
 }

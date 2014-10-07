@@ -6,12 +6,26 @@ App.Router.map(function() {
 App.ManageRoute = Ember.Route.extend({
     model: function(){
         return $.getJSON('/books/').success(function(data){
-            console.log(data);
             return data;
         });
+    },
+    setupController: function(controller, model) {
+        controller.set('model', model);
+        $.getJSON('/user/').success(function(data){
+            console.log(data);
+            controller.set('user', data);
+        });
     }
+
 });
 
+App.ManageController = Ember.ArrayController.extend({
+    actions: {
+        mark_read: function(book) {
+            console.log(book.ASIN);           
+        }
+   }
+});
 
 App.IndexController = Ember.ArrayController.extend({
     selected_book: null,

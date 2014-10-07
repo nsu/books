@@ -82,21 +82,24 @@
   </script>
 
     <script type="text/x-handlebars" id="manage">
+        {{user}}
         <div class="container">
         {{#each}}
         <div style="padding-bottom: 10px" class="row">
             <div class="col-md-1">
                 <img {{bind-attr src=this.smallThumbnail}}>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-5">
                 <div style="margin-left:15px" class="content-heading">
                     <h3 class="nomargin-bottom">{{this.title}}</h3>
                     <h4 class="nomargin-top"><small>{{this.author}}</small></h4>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-6">
                 <h3>
-                    <button {{action "select_suggestion" this}} type="button" class="pull-right btn btn-primary">Select</button>
+                    {{# unless this.read }}
+                        <button {{action "mark_read" this}} type="button" class="pull-right btn btn-primary">Unread</button>
+                    {{/unless}}
                 </h3>
             </div>
         </div>
