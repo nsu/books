@@ -22,29 +22,6 @@ var opHelper = new OperationHelper({
     assocId:   'alexkarpinski-20'
 });
 
-////////////////////////////////////////
-// MongoDB and Mongoose configuration //
-////////////////////////////////////////
-var mongo = require('mongodb');
-var mongoose = require('mongoose');
-connection_string = process.env.MONGOHQ_URL || '10.0.33.34/karp-books';
-var db = mongoose.connect(connection_string);
-
-var userSchema = new mongoose.Schema({
-    facebookId: String
-})
-var User = mongoose.model('User', userSchema);
-
-var bookSchema = new mongoose.Schema({
-    industry_id:    String,
-    ASIN:           String,
-    amazon_link:    String,
-    read:           Boolean,
-    suggested:      Boolean
-}, {strict: false})
-var Book = mongoose.model('Book', bookSchema);
-
-
 ////////////////////////////////////////////
 // Passport (Facebook auth) Configuration //
 ////////////////////////////////////////////
@@ -57,8 +34,10 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(new FacebookStrategy({
-    clientID: "706544599428296",
-    clientSecret: "38d9e6c58e694cf8684fe8d637e0e16a",
+    //clientID: "706544599428296",
+    //clientSecret: "38d9e6c58e694cf8684fe8d637e0e16a",
+    clientID: "707739085975514",
+    clientSecret: "06ddac484f320ef9f73c3944f9583b31",
     callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
@@ -105,87 +84,13 @@ app.use(function(req,res,next){
     next();
 });
 
-var router = express.Router();
+// Books Endpoint
+require('./books')(app);
+require('./user')(app);
 
-router.route('/').get(function(req,res){
+// Ember app (homepage)
+app.get('/', function(req,res){
     res.sendFile("public/ember-app/index.html", { root: __dirname });
-});
-
-router.route('/books')
-
-    .post(function(req, res){
-        // POSTing is only allowed for creating new books
-        Book.findOne({'industry_id': req.body.industry_id}, function(err, book){
-            if (book){
-                return res.status(409).end();
-            }
-            book = new Book(req.body)
-            book.save(function(err, doc){
-                if (err) {
-                    res.send(err);
-                }
-                res.json(doc);
-                req.opHelper.execute('ItemLookup', {
-                    'SearchIndex': 'Books',
-                    'ItemId': doc.industry_id,
-                    'IdType': 'ISBN'
-                }, function(err, results) { 
-                    if (err) { return }
-                    result = results.ItemLookupResponse.Items[0].Item[0]
-                    doc.ASIN = result.ASIN[0];
-                    doc.amazon_link = result.DetailPageURL[0];
-                    doc.save(function(err, doc){console.log(doc.ASIN)})
-                });
-            });  
-        });
-    })
-    .get(function(req, res){
-        Book.find({}, function(err, books){
-            if (err) {
-                res.send(err);
-            }
-
-            res.json(books);
-        });
-    });
-
-router.route('/books/:industry_id')
-
-    .get(function(req, res) {
-        var industry_id = req.params.industry_id;
-        Book.findOne({'industry_id': industry_id}, function(err, book) {
-            if (err)
-                res.send(err);
-            res.json(book);
-        });
-    })
-    .put(function(req, res){
-        //if (!req.user || !req.user.facebookId === "10152371097391581") { return res.status(403).end(); }
-        var industry_id = req.params.industry_id;
-        // strip off the _id field. Mongoose doesn't allow updates with that included
-        delete req.body._id;
-        Book.findOneAndUpdate({'industry_id': industry_id}, req.body, function(err, book){
-            if (err) {
-                console.log(err);
-                res.send(err);
-            }
-            res.json(book);
-        });
-    });
-
-router.route('/user/').get(function(req, res) {
-    if (!req.user || !req.user.facebookId === "10152371097391581") { return res.status(403).end(); }
-    res.json(req.user);
-});
-
-app.use ('/', router);
-
-//app.get('/manage', ensureAuthenticated, function(req, res){
-//    res.sendFile("public/ember-app/manage.html", { root: __dirname });
-//});
-
-app.get('/login', function(req, res){
-  res.render('login', { user: req.user });
 });
 
 app.get('/auth/facebook',

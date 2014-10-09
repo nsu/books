@@ -82,31 +82,32 @@
   </script>
 
     <script type="text/x-handlebars" id="manage">
-        {{user}}
         <div class="container">
+        {{#with anon as inner_anon}}
         {{#each}}
         <div style="padding-bottom: 10px" class="row">
             <div class="col-md-1">
                 <img {{bind-attr src=this.smallThumbnail}}>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-8">
                 <div style="margin-left:15px" class="content-heading">
                     <h3 class="nomargin-bottom">{{this.title}}</h3>
                     <h4 class="nomargin-top"><small>{{this.author}}</small></h4>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <h3>
-                    <a {{bind-attr href=this.amazon_link}} class="btn btn-primary">View on Amazon</a>
+                    <a {{bind-attr href=this.amazon_link disabled=this.linkable}} class="btn btn-primary">View on Amazon</a>
                     {{# unless this.read }}
-                        <button {{action "toggle_read" this}} type="button" class="btn btn-default">Unread</button>
+                    <button {{bind-attr disabled=inner_anon}} {{action "toggle_read" this}} type="button" class="btn btn-default">Unread</button>
                     {{else}}
-                        <button {{action "toggle_read" this}} type="button" class="btn btn-success">Read</button>
+                    <button {{bind-attr disabled=inner_anon}} {{action "toggle_read" this}} type="button" class="btn btn-success">Read</button>
                     {{/unless}}
                 </h3>
             </div>
         </div>
         {{/each}}
+        {{/with}}
         </div>
     </script>
 

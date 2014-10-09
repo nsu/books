@@ -11,8 +11,10 @@ App.ManageRoute = Ember.Route.extend({
     },
     setupController: function(controller, model) {
         controller.set('model', model);
-        $.getJSON('/user/').success(function(data){
-            controller.set('user', data);
+        $.getJSON('/user/').done(function(data){
+            controller.set('anon', false);
+        }).fail(function(){
+            controller.set('anon', true);
         });
     }
 
@@ -20,11 +22,20 @@ App.ManageRoute = Ember.Route.extend({
 
 App.ManageController = Ember.ArrayController.extend({
     itemController: 'book',
+    anon: true
 });
+
 
 // When a book's read/unread button is clicked
 // flip the read value and PUT to the app
 App.BookController = Ember.ObjectController.extend({
+    linkable: function(){
+        if (this.get('amazon_link')){
+            return false
+        } else {
+            return true
+        }
+    }.property('amazon_link'),
     actions: {
         toggle_read: function(book) {
             self = this;
@@ -35,6 +46,8 @@ App.BookController = Ember.ObjectController.extend({
                 data: book
             }).done(function(data){
                 self.setProperties(data);
+            }).fail(function(){
+                self.set('read', !book.read);
             });
         }
    }
@@ -87,7 +100,6 @@ App.IndexController = Ember.ArrayController.extend({
     actions: {
         select_suggestion: function(book){
             self = this
-            console.log(book);
             $.getJSON('books/'+book.industry_id).success(function(data){
                 if (data) {
                     self.set('selected_book', data);
