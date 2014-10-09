@@ -17,9 +17,9 @@ var secrets = require('./secrets');
 // Amazon Product API Configuration //
 //////////////////////////////////////
 var opHelper = new OperationHelper({
-    awsId:     'AKIAJ3BXVJBC65TRDXMQ',
+    awsId:     "AKIAIOXRAFHXGO6DECRQ",
     awsSecret: secrets.amazon,
-    assocId:   'alexkarpinski-20'
+    assocId:   "alexkarpinski-20"
 });
 
 

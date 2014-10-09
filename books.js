@@ -9,7 +9,6 @@ router.route('/')
 
     .post(function(req, res){
         // POSTing is only allowed for creating new books
-        console.log(req.body);
         Book.findOne({'industry_id': req.body.industry_id}, function(err, book){
             if (book){
                 return res.status(409).end();
