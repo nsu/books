@@ -1,7 +1,17 @@
 module.exports = function(app) {
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
-var secrets = require('./secrets')
+var fs = require('fs');
+
+if (fs.existsSync('./secrets.js')) {
+    var secrets = require('./secrets');
+} else {
+    var secrets = {
+        amazon: process.env.AMAZON_SECRET,
+        facebook: process.env.FACEBOOK_SECRET,
+        session: process.env.SESSION_SECRET
+    };
+}
 
 app.use(passport.initialize());
 app.use(passport.session());
