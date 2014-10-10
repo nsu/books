@@ -20,6 +20,7 @@ if (fs.existsSync(__dirname + '/secrets.js')) {
         session: process.env.SESSION_SECRET
     };
 }
+console.log(secrets);
 
 
 //////////////////////////////////////
@@ -49,7 +50,7 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session({ secret: secrets.session}));
+app.use(session({ secret: "keyboard cat"}));
 
 // Include Amazon Product helper on each request
 app.use(function(req,res,next){
