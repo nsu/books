@@ -9,8 +9,17 @@ var express = require('express');
 var exphbs  = require('express-handlebars');
 var util = require('util');
 var OperationHelper = require('apac').OperationHelper;
+var fs = require('fs');
 
-var secrets = require('./secrets');
+if (fs.existsSync('./secrets')) {
+    var secrets = require('./secrets');
+} else {
+    var secrets = {
+        amazon: process.env.AMAZON_SECRET,
+        facebook: process.env.FACEBOOK_SECRET,
+        session: process.env.SESSION_SECRET
+    };
+}
 
 
 //////////////////////////////////////
@@ -21,7 +30,6 @@ var opHelper = new OperationHelper({
     awsSecret: secrets.amazon,
     assocId:   "alexkarpinski-20"
 });
-
 
 
 //////////////////
