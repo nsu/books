@@ -1,11 +1,15 @@
 App = Ember.Application.create();
 App.Router.map(function() {
-  this.route("manage");
+    // WARNING: This is probably bullshit.
+    // Find a way to combine 1 route with multiple paths
+  this.route("manage", {path: "/manage"});
+  this.route("manage", {path: "/manage/:page"});
 });
 
 App.ManageRoute = Ember.Route.extend({
-    model: function(){
-        return $.getJSON('/books/').success(function(data){
+    model: function(params){
+        console.log(params);
+        return $.getJSON('/books/', {page: params.page}).success(function(data){
             return data;
         });
     },

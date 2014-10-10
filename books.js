@@ -34,7 +34,10 @@ router.route('/')
         });
     })
     .get(function(req, res){
-        Book.find({}, function(err, books){
+        var page_num = req.query.page || 1;
+        var items_per_page = 5;
+        var skip = page_num * items_per_page;
+        Book.find({}).sort('-_id').skip(skip).limit(items_per_page).exec(function(err, books){
             if (err) {
                 res.send(err);
             }
@@ -60,7 +63,6 @@ router.route('/:industry_id')
         delete req.body._id;
         Book.findOneAndUpdate({'industry_id': industry_id}, req.body, function(err, book){
             if (err) {
-                console.log(err);
                 res.send(err);
             }
             res.json(book);
