@@ -11,7 +11,7 @@ var util = require('util');
 var OperationHelper = require('apac').OperationHelper;
 var fs = require('fs');
 
-if (fs.existsSync('./secrets')) {
+if (fs.existsSync(__dirname + '/secrets.js')) {
     var secrets = require('./secrets');
 } else {
     var secrets = {
