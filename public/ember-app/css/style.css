@@ -14,3 +14,7 @@
 .top-buffer { 
     margin-top:20px; 
 }
+
+.inline {
+    display: inline-block
+}

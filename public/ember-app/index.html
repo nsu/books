@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="ember-app/css/normalize.css">
   <link rel="stylesheet" href="ember-app/css/style.css">
   <link rel="stylesheet" href="ember-app/bootstrap/css/bootstrap-yeti.min.css">
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <!-- fixes for facebook auth URL bug -->
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
   <script src="ember-app/js/fb-urlfix.js"></script>
@@ -97,7 +98,7 @@
             </div>
             <div class="col-md-3">
                 <h3>
-                    <a {{bind-attr href=this.amazon_link disabled=this.linkable}} class="btn btn-primary">View on Amazon</a>
+                    <a {{bind-attr href=this.amazon_link disabled=this.linkable}} class="btn btn-primary">Amazon</a>
                     {{# unless this.read }}
                     <button {{bind-attr disabled=inner_anon}} {{action "toggle_read" this}} type="button" class="btn btn-default">Unread</button>
                     {{else}}
@@ -108,12 +109,28 @@
         </div>
         {{/each}}
         {{/with}}
+
+        <div class="row">
+        <div class="col-md-2">
         {{#if prev_page_num }}
-            {{#link-to 'manage' prev_page_num}} Prev {{/link-to}}
+            {{#link-to 'manage' prev_page_num}} 
+                <i class="fa fa-chevron-circle-left fa-2x"></i>
+                <h2 class="inline">prev</h2> 
+            {{/link-to}}
         {{/if}}
+        </div>
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
         {{#if next_page_num }}
-            {{#link-to 'manage' next_page_num}} Next {{/link-to}}
+            {{#link-to 'manage' next_page_num}} 
+                <div style="margin-left: -10%">
+                    <h2 class="inline">next</h2> 
+                    <i class="fa fa-chevron-circle-right fa-2x"></i>
+                </div>
+            {{/link-to}}
         {{/if}}
+        </div>
+        </div> <!-- end row -->
         </div>
     </script>
 
