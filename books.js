@@ -24,11 +24,25 @@ router.route('/')
                     'ItemId': doc.industry_id,
                     'IdType': 'ISBN'
                 }, function(err, results) { 
-                    if (err || results.ItemLookupResponse.Items[0].Item == undefined) { return }
-                    result = results.ItemLookupResponse.Items[0].Item[0];
-                    doc.ASIN = result.ASIN[0];
-                    doc.amazon_link = result.DetailPageURL[0];
-                    doc.save(function(err, doc){console.log(doc.ASIN)})
+                    if (err) { return }
+                    if (results.ItemLookupResponse.Items[0].Item == undefined) {
+                        req.opHelper.execute('ItemSearch', {
+                            'SearchIndex': 'KindleStore',
+                            'Title': doc.title,
+                            'Author': doc.author
+                        }, function(err, results) { 
+                            if (err || results.ItemSearchResponse.Items[0].Item == undefined) { return }
+                            result = results.ItemSearchResponse.Items[0].Item[0];
+                            doc.ASIN = result.ASIN[0];
+                            doc.amazon_link = result.DetailPageURL[0];
+                            doc.save(function(err, doc){console.log(doc.ASIN)})
+                        });
+                    } else {
+                        result = results.ItemLookupResponse.Items[0].Item[0];
+                        doc.ASIN = result.ASIN[0];
+                        doc.amazon_link = result.DetailPageURL[0];
+                        doc.save(function(err, doc){console.log(doc.ASIN)})
+                    }
                 });
             });  
         });

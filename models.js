@@ -16,7 +16,9 @@ var bookSchema = new mongoose.Schema({
     ASIN:           String,
     amazon_link:    String,
     read:           Boolean,
-    suggested:      Boolean
+    suggested:      Boolean,
+    title:          String,
+    author:         String,
 }, {strict: false})
 var Book = mongoose.model('Book', bookSchema);
 
