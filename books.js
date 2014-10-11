@@ -36,13 +36,22 @@ router.route('/')
     .get(function(req, res){
         var page_num = req.query.page || 1;
         var items_per_page = 5;
-        var skip = page_num * items_per_page;
-        Book.find({}).sort('-_id').skip(skip).limit(items_per_page).exec(function(err, books){
+        var skip = (page_num-1) * items_per_page;
+        Book.find({}).sort('-_id')
+        .skip(skip).limit(items_per_page)
+        .exec(function(err, books){
             if (err) {
                 res.send(err);
             }
-
-            res.json(books);
+            return_doc = {
+                items:          books,
+                item_count:     books.length,
+                page_num:       page_num
+            }
+            Book.count(function(err, count){
+                return_doc['total_count'] = count;
+                res.json(return_doc);
+            });
         });
     });
 

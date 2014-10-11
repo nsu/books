@@ -8,25 +8,46 @@ App.Router.map(function() {
 
 App.ManageRoute = Ember.Route.extend({
     model: function(params){
-        console.log(params);
         return $.getJSON('/books/', {page: params.page}).success(function(data){
             return data;
         });
     },
     setupController: function(controller, model) {
-        controller.set('model', model);
-        $.getJSON('/user/').done(function(data){
-            controller.set('anon', false);
-        }).fail(function(){
-            controller.set('anon', true);
-        });
+         controller.set('model', model.items);
+         // +string shorthand for converting to int
+         controller.set('page_num', +model.page_num);
+         controller.set('total_count', +model.total_count);
+         controller.set('item_count', +model.item_count);
+         $.getJSON('/user/').done(function(data){
+             controller.set('anon', false);
+         }).fail(function(){
+             controller.set('anon', true);
+         });
     }
 
 });
 
 App.ManageController = Ember.ArrayController.extend({
     itemController: 'book',
-    anon: true
+
+    next_page_num: function(){
+        p_num = this.get('page_num') + 1;
+        if (p_num > this.get('total_page_nums')) {
+            return null;
+        }
+        return p_num;
+    }.property('page_num'),
+    prev_page_num: function(){
+        p_num = this.get('page_num') - 1;
+        if (p_num < 1) {
+            return null;
+        }
+        return p_num;
+    }.property('page_num'),
+
+    total_page_nums: function(){
+        return Math.ceil(this.get('total_count') / 5) // 5 is the numer of items per page. SUBJECT TO CHANGE                 
+    }.property('total_count')
 });
 
 
@@ -128,10 +149,3 @@ App.IndexController = Ember.ArrayController.extend({
     }
 
 });
-
-Ember.Handlebars.helper('truncate', function(length, text) {
-    if (text && text.length > length) {
-        return text.substr(0,length) + '. . .';
-    }
-    return text;
-})
