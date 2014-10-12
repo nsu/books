@@ -6,13 +6,31 @@
   <link rel="stylesheet" href="ember-app/css/normalize.css">
   <link rel="stylesheet" href="ember-app/css/style.css">
   <link rel="stylesheet" href="ember-app/bootstrap/css/bootstrap-yeti.min.css">
-  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <!-- fixes for facebook auth URL bug -->
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
   <script src="ember-app/js/fb-urlfix.js"></script>
 </head>
 <body>
   <script type="text/x-handlebars">
+      <div class="pull-right btn-group btn-group-xs"> <!-- extra '+' menu for suggestions & login -->
+        <i class="fa fa-plus-square-o fa-2x dropdown-toggle cursor-pointer" data-toggle="dropdown"></i>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            {{#link-to 'index'}} 
+                <i class="fa fa-home"></i> Home
+            {{/link-to}}
+          </li>
+          <li>
+            {{#link-to 'manage' 1}} 
+                <i class="fa fa-th-list"></i> Suggestions
+            {{/link-to}}
+          </li>
+          <li>
+            <a href="/auth/facebook"><i class="fa fa-facebook-square"></i > Login</a>
+          </li>
+        </ul>
+      </div> <!-- end dropdown -->
     {{outlet}}
   </script>
 
@@ -23,8 +41,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8"">
+        <div class="col-md-8 col-md-offset-2">
             {{input class="form-control input-lg" type=text value=searchQuery placeholder="Search..."}}
             <div style="margin-top:20px" class="well">
                 {{# unless selected_book }}
@@ -119,8 +136,7 @@
             {{/link-to}}
         {{/if}}
         </div>
-        <div class="col-md-8"></div>
-        <div class="col-md-2">
+        <div class="col-md-2 col-md-offset-8">
         {{#if next_page_num }}
             {{#link-to 'manage' next_page_num}} 
                 <div style="margin-left: -10%">
@@ -138,9 +154,9 @@
   <!--<script src="ember-app/js/libs/jquery-1.10.2.js"></script>
   <script src="ember-app/js/libs/handlebars-1.1.2.js"></script>
   <script src="ember-app/js/libs/ember-1.7.0.js"></script> -->
-  <script src="http:////ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.1.2/handlebars.min.js"></script>
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/ember.js/1.7.0/ember.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.1.2/handlebars.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ember.js/1.7.0/ember.min.js"></script>
   <script src="ember-app/js/app.js"></script> 
   <!-- bootstrap -->
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

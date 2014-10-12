@@ -2,8 +2,8 @@ App = Ember.Application.create();
 App.Router.map(function() {
     // WARNING: This is probably bullshit.
     // Find a way to combine 1 route with multiple paths
-  this.route("manage", {path: "/manage"});
-  this.route("manage", {path: "/manage/:page"});
+  this.route("manage", {path: "/list"});
+  this.route("manage", {path: "/list/:page"});
 });
 
 App.ManageRoute = Ember.Route.extend({
