@@ -47,7 +47,12 @@ App.ManageController = Ember.ArrayController.extend({
 
     total_page_nums: function(){
         return Math.ceil(this.get('total_count') / 5) // 5 is the numer of items per page. SUBJECT TO CHANGE                 
-    }.property('total_count')
+    }.property('total_count'),
+    
+    actions: {
+         delete_item: function(item){
+         }
+    }
 });
 
 
@@ -73,6 +78,18 @@ App.BookController = Ember.ObjectController.extend({
                 self.setProperties(data);
             }).fail(function(){
                 self.set('read', !book.read);
+            });
+        },
+        hide_item: function(book){
+            self = this;
+            book.hidden = true;
+            $.ajax({
+                type: 'PUT', 
+                url: 'books/'+book.industry_id,
+                data: book
+            }).done(function(data){
+                book_list = anon = self.controllerFor('manage').get('model');
+                book_list.removeObject(book);
             });
         }
    }
@@ -100,8 +117,9 @@ App.IndexController = Ember.ArrayController.extend({
                         book.smallThumbnail = book.imageLinks.smallThumbnail;
                         book.thumbnail = book.imageLinks.thumbnail;
                     }
-                    book.suggested = null;
-                    book.read = null;
+                    book.suggested = false;
+                    book.read = false;
+                    book.hidden = false;
                     return book;
                 });
                 data = data.slice(0,4);

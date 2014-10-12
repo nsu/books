@@ -51,7 +51,7 @@ router.route('/')
         var page_num = req.query.page || 1;
         var items_per_page = 5;
         var skip = (page_num-1) * items_per_page;
-        Book.find({}).sort('-_id')
+        Book.find({hidden:false}).sort('-_id')
         .skip(skip).limit(items_per_page)
         .exec(function(err, books){
             if (err) {
@@ -62,7 +62,7 @@ router.route('/')
                 item_count:     books.length,
                 page_num:       page_num
             }
-            Book.count(function(err, count){
+            Book.count({hidden: false}, function(err, count){
                 return_doc['total_count'] = count;
                 res.json(return_doc);
             });
@@ -82,9 +82,10 @@ router.route('/:industry_id')
     .put(function(req, res){
         if (!req.user || !req.user.facebookId === "10152371097391581") { return res.status(403).end(); }
         var industry_id = req.params.industry_id;
+        var _id = req.body._id;
         // strip off the _id field. Mongoose doesn't allow updates with that included
         delete req.body._id;
-        Book.findOneAndUpdate({'industry_id': industry_id}, req.body, function(err, book){
+        Book.findOneAndUpdate({'_id': _id}, req.body, function(err, book){
             if (err) {
                 res.send(err);
             }

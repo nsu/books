@@ -121,6 +121,9 @@
                     {{else}}
                     <button {{bind-attr disabled=inner_anon}} {{action "toggle_read" this}} type="button" class="btn btn-success">Read</button>
                     {{/unless}}
+                    {{#unless inner_anon}}
+                    <i {{action "hide_item" this}} style="margin-top:12px;" class="fa fa-close cursor-pointer pull-right"></i>
+                    {{/unless}}
                 </h3>
             </div>
         </div>
@@ -139,7 +142,7 @@
         <div class="col-md-2 col-md-offset-8">
         {{#if next_page_num }}
             {{#link-to 'manage' next_page_num}} 
-                <div style="margin-left: -10%">
+                <div style="margin-left: 30%">
                     <h2 style="vertical-align: -8%" class="inline">next</h2> 
                     <i class="fa fa-chevron-right fa-lg"></i>
                 </div>

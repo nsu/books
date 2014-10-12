@@ -12,13 +12,13 @@ var userSchema = new mongoose.Schema({
 var User = mongoose.model('User', userSchema);
 
 var bookSchema = new mongoose.Schema({
-    industry_id:    String,
+    industry_id:    {type: [String], index: true}, 
     ASIN:           String,
     amazon_link:    String,
     read:           Boolean,
-    suggested:      Boolean,
     title:          String,
     author:         String,
+    hidden:         {type: [Boolean], index: true},
 }, {strict: false})
 var Book = mongoose.model('Book', bookSchema);
 
