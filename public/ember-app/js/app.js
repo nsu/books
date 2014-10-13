@@ -130,6 +130,9 @@ App.IndexController = Ember.ArrayController.extend({
                 self.set('suggestions', data);
                 self.set('selected_book', null);
             });
+        } else {
+            self.set('suggestions', null);
+            self.set('selected_book', null);
         }
     },
     suggestion_debouncer: function(){
