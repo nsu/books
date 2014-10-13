@@ -30,7 +30,7 @@ passport.deserializeUser(function(user, done) {
 passport.use(new FacebookStrategy({
     clientID: "707739085975514",
     clientSecret: secrets.facebook,
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    callbackURL: process.env.AUTH_URL || "http://localhost:3000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     User.findOne({ facebookId: profile.id }, function(err, user) {
