@@ -51,7 +51,11 @@ router.route('/')
         var page_num = req.query.page || 1;
         var items_per_page = 5;
         var skip = (page_num-1) * items_per_page;
-        Book.find({hidden:false}).sort('-_id')
+        var query_params = {};
+        if (req.query.hidden) {
+            query_params.hidden = req.query.hidden;
+        }
+        Book.find(query_params).sort('-_id')
         .skip(skip).limit(items_per_page)
         .exec(function(err, books){
             if (err) {

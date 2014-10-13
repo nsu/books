@@ -8,7 +8,11 @@ App.Router.map(function() {
 
 App.ManageRoute = Ember.Route.extend({
     model: function(params){
-        return $.getJSON('/books/', {page: params.page}).success(function(data){
+        return $.ajax({
+            type: 'GET',
+            url: '/books',
+            data: {hidden: false, page: params.page}
+        }).done(function(data){
             return data;
         });
     },
@@ -131,14 +135,6 @@ App.IndexController = Ember.ArrayController.extend({
     suggestion_debouncer: function(){
         Ember.run.debounce(this, this.suggestion_updater, 300);
     }.observes('searchQuery'),
-
-    //book_detective: function(){
-    //    self = this;
-    //    book = this.get('selected_book');
-    //    if (!book) { return}
-    //    //$.post('books', book).done(function(data){
-    //    //});
-    //}.observes("selected_book"),
 
     actions: {
         select_suggestion: function(book){
