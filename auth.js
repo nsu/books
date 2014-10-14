@@ -28,6 +28,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 
+// Choose testing || production credentials
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_ID || "707739085975514",
     clientSecret: secrets.facebook,
