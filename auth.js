@@ -28,7 +28,6 @@ passport.deserializeUser(function(user, done) {
 });
 
 
-console.log(process.env.AUTH_URL || "http://localhost:3000/auth/facebook/callback")
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_ID || "707739085975514",
     clientSecret: secrets.facebook,
