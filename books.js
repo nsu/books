@@ -3,7 +3,7 @@ module.exports = function(app) {
 // will all get aliased under /books router
 var express = require('express');
 Book = require('./models').Book;
-router = express.Router()
+router = express.Router();
 
 router.route('/')
 
@@ -13,7 +13,7 @@ router.route('/')
             if (book){
                 return res.status(409).end();
             }
-            book = new Book(req.body)
+            book = new Book(req.body);
             book.save(function(err, doc){
                 if (err) {
                     res.send(err);
@@ -24,24 +24,32 @@ router.route('/')
                     'ItemId': doc.industry_id,
                     'IdType': 'ISBN'
                 }, function(err, results) { 
-                    if (err) { return }
-                    if (results.ItemLookupResponse.Items[0].Item == undefined) {
+                    if (err) { return ;}
+                    if (results.ItemLookupResponse.Items[0].Item === undefined) {
                         req.opHelper.execute('ItemSearch', {
                             'SearchIndex': 'KindleStore',
                             'Title': doc.title,
                             'Author': doc.author
                         }, function(err, results) { 
-                            if (err || results.ItemSearchResponse.Items[0].Item == undefined) { return }
+                            if (err || results.ItemSearchResponse.Items[0].Item === undefined) { return; }
                             result = results.ItemSearchResponse.Items[0].Item[0];
                             doc.ASIN = result.ASIN[0];
                             doc.amazon_link = result.DetailPageURL[0];
-                            doc.save(function(err, doc){console.log(doc.ASIN)})
+                            doc.save(
+                                function(err, doc){
+                                    console.log(doc.ASIN);
+                                }
+                            );
                         });
                     } else {
                         result = results.ItemLookupResponse.Items[0].Item[0];
                         doc.ASIN = result.ASIN[0];
                         doc.amazon_link = result.DetailPageURL[0];
-                        doc.save(function(err, doc){console.log(doc.ASIN)})
+                        doc.save(
+                            function(err, doc){
+                                console.log(doc.ASIN);
+                            }
+                        );
                     }
                 });
             });  
@@ -65,9 +73,9 @@ router.route('/')
                 items:          books,
                 item_count:     books.length,
                 page_num:       page_num
-            }
+            };
             Book.count({hidden: false}, function(err, count){
-                return_doc['total_count'] = count;
+                return_doc.total_count = count;
                 res.json(return_doc);
             });
         });
@@ -84,7 +92,7 @@ router.route('/:industry_id')
         });
     })
     .put(function(req, res){
-        if (!req.user || !req.user.facebookId === "10152371097391581") { return res.status(403).end(); }
+        if (!req.user || (req.user.facebookId !== "10152371097391581") ) { return res.status(403).end(); }
         var industry_id = req.params.industry_id;
         var _id = req.body._id;
         // strip off the _id field. Mongoose doesn't allow updates with that included
@@ -99,4 +107,4 @@ router.route('/:industry_id')
 
     app.use('/books', router);
 
-} // close module export
+}; // close module export

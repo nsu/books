@@ -8,7 +8,7 @@ var db = mongoose.connect(connection_string);
 
 var userSchema = new mongoose.Schema({
     facebookId: String
-})
+});
 var User = mongoose.model('User', userSchema);
 
 var bookSchema = new mongoose.Schema({
@@ -19,8 +19,8 @@ var bookSchema = new mongoose.Schema({
     title:          String,
     author:         String,
     hidden:         {type: [Boolean], index: true},
-}, {strict: false})
+}, {strict: false});
 var Book = mongoose.model('Book', bookSchema);
 
-module.exports = {Book: Book, User: User}
+module.exports = {Book: Book, User: User};
 

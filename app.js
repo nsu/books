@@ -25,6 +25,8 @@ if (fs.existsSync('./secrets.js')) {
 //////////////////////////////////////
 // Amazon Product API Configuration //
 //////////////////////////////////////
+
+
 var opHelper = new OperationHelper({
     awsId:     "AKIAIOXRAFHXGO6DECRQ",
     awsSecret: secrets.amazon,

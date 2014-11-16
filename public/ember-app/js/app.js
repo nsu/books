@@ -50,7 +50,7 @@ App.ManageController = Ember.ArrayController.extend({
     }.property('page_num'),
 
     total_page_nums: function(){
-        return Math.ceil(this.get('total_count') / 5) // 5 is the numer of items per page. SUBJECT TO CHANGE                 
+        return Math.ceil(this.get('total_count') / 5); // 5 is the numer of items per page. SUBJECT TO CHANGE                 
     }.property('total_count'),
     
     actions: {
@@ -65,9 +65,9 @@ App.ManageController = Ember.ArrayController.extend({
 App.BookController = Ember.ObjectController.extend({
     linkable: function(){
         if (this.get('amazon_link')){
-            return false
+            return false;
         } else {
-            return true
+            return true;
         }
     }.property('amazon_link'),
     actions: {
@@ -109,9 +109,9 @@ App.IndexController = Ember.ArrayController.extend({
         if (this.get('searchQuery')) {
             Ember.$.getJSON('https://www.googleapis.com/books/v1/volumes?maxResults=6&q=' + this.get('searchQuery')).then(function(data){
                 data = data.items.filter(function(book){
-                    return book.volumeInfo.industryIdentifiers !== undefined
+                    return book.volumeInfo.industryIdentifiers !== undefined;
                 }).map(function(book){
-                    var book = book.volumeInfo;
+                    book = book.volumeInfo;
                     // Flattening out the model to serialize more easily
                     book.industry_id = book.industryIdentifiers[0].identifier;
                     if (book.authors) {
@@ -141,7 +141,7 @@ App.IndexController = Ember.ArrayController.extend({
 
     actions: {
         select_suggestion: function(book){
-            self = this
+            self = this;
             $.getJSON('books/'+book.industry_id).success(function(data){
                 if (data) {
                     self.set('selected_book', data);
@@ -156,7 +156,7 @@ App.IndexController = Ember.ArrayController.extend({
         suggest_book: function(){
             self = this;
             var book = this.get('selected_book');
-            if (book.suggested) {return }
+            if (book.suggested) {return; }
 
             book.suggested = true;
             $.post('books', book).done(function(data){
@@ -172,4 +172,4 @@ Ember.Handlebars.helper('truncate', function(length, text) {
         return text.substr(0,length) + '. . .';
     }
     return text;
-})
+});

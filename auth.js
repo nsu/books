@@ -3,10 +3,11 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var fs = require('fs');
 
+var secrets;
 if (fs.existsSync('./secrets.js')) {
-    var secrets = require('./secrets');
+    secrets = require('./secrets');
 } else {
-    var secrets = {
+    secrets = {
         amazon: process.env.AMAZON_SECRET,
         facebook: process.env.FACEBOOK_SECRET,
         session: process.env.SESSION_SECRET
@@ -40,9 +41,9 @@ passport.use(new FacebookStrategy({
           return done(err);
       } 
       if (!user){
-        user = new User({ facebookId: profile.id })
+        user = new User({ facebookId: profile.id });
         user.save(function(err, user){
-            return done(null, user)
+            return done(null, user);
         });
       }
       return done(null, user);
@@ -64,4 +65,4 @@ app.get('/auth/facebook/callback',
 });
 
 
-}
+};
