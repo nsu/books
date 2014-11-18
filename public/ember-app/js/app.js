@@ -21,7 +21,6 @@ App.ListRoute = Ember.Route.extend({
             get_params.readStatus = readStatus;
         }
 
-
         return $.ajax({
             type: 'GET',
             url: '/books',
@@ -36,6 +35,8 @@ App.ListRoute = Ember.Route.extend({
          controller.set('page_num', +model.page_num);
          controller.set('total_count', +model.total_count);
          controller.set('item_count', +model.item_count);
+         controller.set('read_status', model.read_status);
+         
          $.getJSON('/user/').done(function(data){
              controller.set('anon', false);
          }).fail(function(){
@@ -68,8 +69,8 @@ App.ListController = Ember.ArrayController.extend({
     }.property('total_count'),
     
     actions: {
-         show_all : function(item){
-             console.log(model);
+         next_page : function(){
+            
          },
          show_read : function(item){
              console.log(model);

@@ -57,13 +57,14 @@ router.route('/')
     })
     .get(function(req, res){
         var page_num = req.query.page || 1;
+        var readStatus = req.query.readStatus;
         var items_per_page = 5;
         var skip = (page_num-1) * items_per_page;
         var query_params = {};
 
-        if (req.query.readStatus === 'read'){
+        if (readStatus === 'read'){
             query_params.read = true;
-        } else if (req.query.readStatus === 'unread') {
+        } else if (readStatus === 'unread') {
             query_params.read = false;
         }
 
@@ -80,7 +81,8 @@ router.route('/')
             return_doc = {
                 items:          books,
                 item_count:     books.length,
-                page_num:       page_num
+                page_num:       page_num,
+                read_status:    readStatus
             };
             Book.count({hidden: false}, function(err, count){
                 return_doc.total_count = count;

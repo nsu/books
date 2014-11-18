@@ -102,10 +102,10 @@
     <script type="text/x-handlebars" id="list">
         <div class="container">
         <div style="padding-bottom: 10px" class="row">
-            <div class="col-md-offset-8"> </div>
-            <div class="col-md-4"> 
-                <i {{action "show_all"}} class="fa fa-bookmark-o fa-2x cursor-pointer"></i>
-                <i {{action "show_read"}} class="fa fa-bookmark fa-2x cursor-pointer"></i>
+            <div class="col-md-4" style="margin-left: 3px"> 
+                {{#link-to 'list' 'all' 1}}<i class="text-info fa fa-adjust cursor-pointer"></i>{{/link-to}}
+                {{#link-to 'list' 'read' 1}}<i class="text-success fa fa-circle cursor-pointer"></i>{{/link-to}}
+                {{#link-to 'list' 'unread' 1}}<i class="text-muted fa fa-circle-o cursor-pointer"></i>{{/link-to}}
             </div>
         </div> 
         {{#with anon as inner_anon}}
@@ -140,7 +140,7 @@
         <div class="row">
         <div class="col-md-2">
         {{#if prev_page_num }}
-            {{#link-to 'list' (query-params page=prev_page_num) }} 
+            {{#link-to 'list' read_status prev_page_num}} 
                 <i class="fa fa-chevron-left fa-lg"></i>
                 <h2 style="vertical-align: -8%" class="inline">prev</h2> 
             {{/link-to}}
@@ -148,7 +148,7 @@
         </div>
         <div class="col-md-2 col-md-offset-8">
         {{#if next_page_num }}
-            {{#link-to 'list' (query-params page=next_page_num) }} 
+            {{#link-to 'list' read_status next_page_num}} 
                 <div style="margin-left: 30%">
                     <h2 style="vertical-align: -8%" class="inline">next</h2> 
                     <i class="fa fa-chevron-right fa-lg"></i>
