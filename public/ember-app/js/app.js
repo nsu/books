@@ -2,16 +2,30 @@ App = Ember.Application.create();
 App.Router.map(function() {
     // WARNING: This is probably bullshit.
     // Find a way to combine 1 route with multiple paths
-  this.route("manage", {path: "/list"});
-  this.route("manage", {path: "/list/:page"});
+  this.route("list", {path: "/list/:readStatus"});
+  this.route("list", {path: "/list/:readStatus/:page"});
 });
 
-App.ManageRoute = Ember.Route.extend({
+App.ListRoute = Ember.Route.extend({
     model: function(params){
+        // build ajax request.
+        // hidden is whether or not to show deleted books
+        // pagination specified by page
+        // readStatus is whether to get all books, or only read books, or only unread books
+        var readStatus = params.readStatus;
+        get_params = {
+            hidden: false,
+            page: params.page,
+        };
+        if (readStatus === 'read' || readStatus === 'unread') {
+            get_params.readStatus = readStatus;
+        }
+
+
         return $.ajax({
             type: 'GET',
             url: '/books',
-            data: {hidden: false, page: params.page}
+            data: get_params
         }).done(function(data){
             return data;
         });
@@ -31,7 +45,7 @@ App.ManageRoute = Ember.Route.extend({
 
 });
 
-App.ManageController = Ember.ArrayController.extend({
+App.ListController = Ember.ArrayController.extend({
     itemController: 'book',
 
     next_page_num: function(){
@@ -54,7 +68,11 @@ App.ManageController = Ember.ArrayController.extend({
     }.property('total_count'),
     
     actions: {
-         delete_item: function(item){
+         show_all : function(item){
+             console.log(model);
+         },
+         show_read : function(item){
+             console.log(model);
          }
     }
 });
@@ -92,7 +110,7 @@ App.BookController = Ember.ObjectController.extend({
                 url: 'books/'+book.industry_id,
                 data: book
             }).done(function(data){
-                book_list = anon = self.controllerFor('manage').get('model');
+                book_list = anon = self.controllerFor('list').get('model');
                 book_list.removeObject(book);
             });
         }

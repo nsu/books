@@ -60,6 +60,14 @@ router.route('/')
         var items_per_page = 5;
         var skip = (page_num-1) * items_per_page;
         var query_params = {};
+
+        if (req.query.readStatus === 'read'){
+            query_params.read = true;
+        } else if (req.query.readStatus === 'unread') {
+            query_params.read = false;
+        }
+
+        // check for whether or not to show deleted (hidden) suggestions
         if (req.query.hidden) {
             query_params.hidden = req.query.hidden;
         }
