@@ -84,7 +84,7 @@ router.route('/')
                 page_num:       page_num,
                 read_status:    readStatus
             };
-            Book.count({hidden: false}, function(err, count){
+            Book.count(query_params, function(err, count){
                 return_doc.total_count = count;
                 res.json(return_doc);
             });

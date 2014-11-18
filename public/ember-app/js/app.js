@@ -35,7 +35,12 @@ App.ListRoute = Ember.Route.extend({
          controller.set('page_num', +model.page_num);
          controller.set('total_count', +model.total_count);
          controller.set('item_count', +model.item_count);
-         controller.set('read_status', model.read_status);
+         if (model.read_status === undefined) {
+             controller.set('read_status', 'all');
+         } else {
+             controller.set('read_status', model.read_status);
+         }
+
          
          $.getJSON('/user/').done(function(data){
              controller.set('anon', false);
@@ -55,14 +60,14 @@ App.ListController = Ember.ArrayController.extend({
             return null;
         }
         return p_num;
-    }.property('page_num'),
+    }.property('page_num', 'total_page_nums'),
     prev_page_num: function(){
         p_num = this.get('page_num') - 1;
         if (p_num < 1) {
             return null;
         }
         return p_num;
-    }.property('page_num'),
+    }.property('page_num', 'total_page_nums'),
 
     total_page_nums: function(){
         return Math.ceil(this.get('total_count') / 5); // 5 is the numer of items per page. SUBJECT TO CHANGE                 
