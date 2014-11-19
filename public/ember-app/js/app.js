@@ -6,6 +6,14 @@ App.Router.map(function() {
   this.route("list", {path: "/list/:readStatus/:page"});
 });
 
+
+App.LoadingRoute = Ember.Route.extend({
+    renderTemplate: function() {
+        this.render('working');
+    }
+});
+
+
 App.ListRoute = Ember.Route.extend({
     model: function(params){
         // build ajax request.
@@ -48,7 +56,6 @@ App.ListRoute = Ember.Route.extend({
              controller.set('anon', true);
          });
     }
-
 });
 
 App.ListController = Ember.ArrayController.extend({
@@ -73,14 +80,6 @@ App.ListController = Ember.ArrayController.extend({
         return Math.ceil(this.get('total_count') / 5); // 5 is the numer of items per page. SUBJECT TO CHANGE                 
     }.property('total_count'),
     
-    actions: {
-         next_page : function(){
-            
-         },
-         show_read : function(item){
-             console.log(model);
-         }
-    }
 });
 
 
