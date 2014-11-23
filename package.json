@@ -19,6 +19,7 @@
     "passport": "*",
     "passport-facebook": "*",
     "express-handlebars": "*",
-    "node-apac": "dmcquay/node-apac"
+    "node-apac": "dmcquay/node-apac",
+    "underscore": "*"
   }
 }

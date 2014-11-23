@@ -10,6 +10,7 @@ var exphbs  = require('express-handlebars');
 var util = require('util');
 var OperationHelper = require('apac').OperationHelper;
 var fs = require('fs');
+var _ = require('underscore');
 
 if (fs.existsSync('./secrets.js')) {
     var secrets = require('./secrets');
@@ -56,6 +57,21 @@ app.use(session({ secret: secrets.session}));
 // Include Amazon Product helper on each request
 app.use(function(req,res,next){
     req.opHelper = opHelper;
+    next();
+});
+
+// Check the Origin of the request against a whitelist
+// Set the CORS header accordingly
+app.use(function(req, res, next) {
+    whitelist = [
+        "http://localhost:4200",
+        "http://books.alexkarpinski.com",
+        "http://alexkarp-books.s3-website-us-east-1.amazonaws.com"
+    ];
+    if (_.contains(whitelist, req.headers.origin)) {
+        res.header("Access-Control-Allow-Origin", req.headers.origin);
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    }
     next();
 });
 
